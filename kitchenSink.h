@@ -57,5 +57,5 @@ class Logging
     }
   private:
     void write(const char* msg, const char* color = reset) { printf("%s%s%s", color, msg, reset); }
-    constexpr static const char *red = "\e[31m", *yellow = "\e[33m", *blue = "\e[36", *reset = "\e[0";
+    constexpr static const char *red = "\e[31m", *yellow = "\e[33m", *blue = "\e[36m", *reset = "\e[0m";
 };
