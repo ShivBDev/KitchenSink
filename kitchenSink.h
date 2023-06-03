@@ -6,15 +6,13 @@
 #include <locale>
 
 // iostream, fstream, vector
-static bool openFile(const char* filename, std::shared_ptr<std::vector<char>>& data) noexcept
+static bool openFile(const char* filename, std::vector<char>& data) noexcept
 {
-  try {
   std::ifstream file(filename, std::ios_base::binary);
   if(file.fail()) { printf("File Open Fail: %s\n", filename); return false; }
-  data = std::make_shared<std::vector<char>>( (std::istreambuf_iterator<char>(file)) , (std::istreambuf_iterator<char>()) );
-  if(data->size() <= 0) { printf ("File Empty\n"); return false; }
+  data = std::vector<char>( (std::istreambuf_iterator<char>(file)) , (std::istreambuf_iterator<char>()) );
+  if(data.size() <= 0) { printf ("File Empty\n"); return false; }
   return true;
-  } catch (std::exception e) { data->clear(); return false; }
 }
 
 static std::wstring convertCharToWChar(const char* src) noexcept
