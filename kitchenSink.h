@@ -18,10 +18,32 @@ static bool openFile(const char* filename, std::vector<char>& data) noexcept
 static std::wstring convertCharToWChar(const char* src) noexcept
 {
   constexpr size_t mbstowcsFailVal = -1;
-  size_t size {mbstowcs(nullptr, src, 0)};
+  size_t size { mbstowcs(nullptr, src, 0) };
   if(size == mbstowcsFailVal) { return L""; }
   std::unique_ptr<wchar_t[]> buffer(new wchar_t[size + 1]);
-  return ( mbstowcs(buffer.get(), src, size) == mbstowcsFailVal ) ? L"" : std::wstring(buffer.get());
+  size_t ret { mbstowcs(buffer.get(), src, size) };
+  if(ret == mbstowcsFailVal) { return L""; }
+  buffer.get()[size] = '\0';
+  return std::wstring{buffer.get()};
+}
+
+template <typename T> static bool vectorContains(std::vector<T> vec, T item)
+{ return std::find(vec.begin(), vec.end(), item) != vec.end(); }
+
+template <typename T> static int64_t vectorIndexOf(vector<T> vec, T item)
+{
+  std::vector<T>::iterator position = std::find(vec.begin(), vec.end(), item);
+  return ( position == vec.end() ? -1 : (position - vec.begin()) );
+}
+
+static void stringToLower(std::string& str)
+{ std::transform( str.begin(), str.end(), str.begin(), [](char c)->char{return tolower(c);} ) }
+
+static void stringTrim(std::string& str)
+{
+  auto notSpace = [](char c)->bool{ return !std::isspace(c); };
+  std::erase( str.begin(), std::find_if(str.begin(), str.end(), notSpace) );
+  std::erase( std::find_if(str.rbegin(), str.rend(), notSpace).base(), str.end() );
 }
 
 // locale
